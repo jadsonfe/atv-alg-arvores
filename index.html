@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gerenciador de Tabelas - BST</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .container { max-width: 600px; margin: auto; }
-        .table-list { margin-top: 20px; }
-        .table-item { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; }
-    </style>
-     <script src="app.js"></script>
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js"></script>
+  </head>
+  <body>
     <div class="container">
-        <h2>Gerenciador de Tabelas</h2>
-        <input type="text" id="tableName" placeholder="Nome da tabela">
+      <h2>Gerenciador de Tabelas</h2>
+      <div class="input-group">
+        <input type="text" id="tableName" placeholder="Nome da Tabela" />
         <button onclick="addTable()">Adicionar Tabela</button>
-        <div class="table-list" id="tableList"></div>
+      </div>
+      <div class="table-list" id="tableList"></div>
     </div>
-   
-</body>
+  </body>
 </html>
