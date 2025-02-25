@@ -78,6 +78,9 @@ class BST {
 const bst = new BST((a, b) => a.name.localeCompare(b.name)); // BST para tabelas
 let recordIdCounter = 0; // Contador para gerar IDs únicos para os registros
 
+
+/* MÉTODOS DE MANIPULAÇÃO DE DADOS */
+
 function addTable() {
   const tableName = document.getElementById("tableName").value.trim();
   if (!tableName) return alert("Digite um nome válido para a tabela.");
@@ -86,7 +89,7 @@ function addTable() {
   renderTables();
 }
 
-let currentTable = null; // Variável global para armazenar a tabela atual
+let currentTable = null;
 
 function addColumn(tableName) {
   currentTable = bst.search({ name: tableName });
@@ -150,20 +153,6 @@ function toggleForeignKey() {
     : "none";
 }
 
-function closeModal() {
-  document.getElementById("columnModal").style.display = "none";
-
-  // Resetar os campos do modal
-  document.getElementById("columnName").value = "";
-  document.getElementById("columnType").value = "";
-  document.getElementById("allowNull").checked = false;
-  document.getElementById("isPrimaryKey").checked = false;
-  document.getElementById("isForeignKey").checked = false;
-  document.getElementById("foreignKeyFields").style.display = "none";
-  document.getElementById("referencedTable").value = "";
-  document.getElementById("referencedColumn").value = "";
-}
-
 function addRecord(tableName) {
   const table = bst.search({ name: tableName });
   if (!table) return alert("Tabela não encontrada.");
@@ -206,6 +195,22 @@ function saveRecord() {
 function closeRecordModal() {
   document.getElementById("recordModal").style.display = "none";
 }
+
+function closeModal() {
+  document.getElementById("columnModal").style.display = "none";
+
+  // Resetar os campos do modal
+  document.getElementById("columnName").value = "";
+  document.getElementById("columnType").value = "";
+  document.getElementById("allowNull").checked = false;
+  document.getElementById("isPrimaryKey").checked = false;
+  document.getElementById("isForeignKey").checked = false;
+  document.getElementById("foreignKeyFields").style.display = "none";
+  document.getElementById("referencedTable").value = "";
+  document.getElementById("referencedColumn").value = "";
+}
+
+/* MÉTODOS DE RENDERIZAÇÃO */
 
 function renderTables() {
   const tableList = document.getElementById("tableList");
@@ -326,6 +331,7 @@ function renderTables() {
   });
 }
 
+/* EVENTOS DE DOM */
 
 document.addEventListener("DOMContentLoaded", function() {
   renderTables(); // Chama a função renderTables assim que o conteúdo da página for carregado
