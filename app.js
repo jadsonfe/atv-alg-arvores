@@ -164,19 +164,6 @@ function closeModal() {
   document.getElementById("referencedColumn").value = "";
 }
 
-/* function addRecord(tableName) {
-  const table = bst.search({ name: tableName });
-  if (!table) return alert("Tabela não encontrada.");
-  let record = {};
-  table.columns.inOrder(table.columns.root, (col) => {
-    const value = prompt(`Digite um valor para a coluna ${col.name}:`);
-    record[col.name] = value;
-  });
-  recordIdCounter++; // Incrementa o contador de IDs
-  table.records.insert(new RecordNode(recordIdCounter, record)); // Insere o registro com um ID único
-  renderTables();
-} */
-
 function addRecord(tableName) {
   const table = bst.search({ name: tableName });
   if (!table) return alert("Tabela não encontrada.");
@@ -226,10 +213,20 @@ function renderTables() {
 
   tableList.innerHTML = "";
 
-  bst.inOrder(bst.root, (node) => {
-    const tableElement = tableTemplate.content.cloneNode(true); // Clona o template
+  if (bst.root === null) {
+    const noTableMessage = document.createElement("p");
+    noTableMessage.textContent =
+      "Nenhuma tabela cadastrada. Adicione uma tabela.";
+    noTableMessage.style.textAlign = "center";
+    noTableMessage.style.color = "gray";
+    tableList.appendChild(noTableMessage);
+    return; // Se não houver tabelas, interrompe a função
+  }
 
-    tableElement.querySelector(".table-name").textContent = node.name; // Define o nome da tabela
+  bst.inOrder(bst.root, (node) => {
+    const tableElement = tableTemplate.content.cloneNode(true);
+
+    tableElement.querySelector(".table-name").textContent = node.name;
 
     // Botões
     tableElement
@@ -239,28 +236,97 @@ function renderTables() {
       .querySelector(".add-record-btn")
       .addEventListener("click", () => addRecord(node.name));
 
+    // Toggle para colunas
+    const toggleColumnsBtn = tableElement.querySelector(".toggle-columns-btn");
+    const columnsTable = tableElement.querySelector(".table-structure");
+    toggleColumnsBtn.addEventListener("click", () => {
+      columnsTable.classList.toggle("hidden");
+      toggleColumnsBtn.textContent = columnsTable.classList.contains("hidden")
+        ? "Mostrar Detalhes das Colunas"
+        : "Ocultar Detalhes das Colunas";
+    });
+
     // Colunas
     const columnsList = tableElement.querySelector(".columns-list");
+    columnsList.innerHTML = "";
+
+    let hasColumns = false; // Flag para verificar se há colunas
+
     node.columns.inOrder(node.columns.root, (col) => {
-      const li = document.createElement("li");
-      li.textContent = `${col.name} (${col.type}) - NULL: ${
-        col.allowNull
-      } | PK: ${col.isPrimaryKey} | FK: ${col.isForeignKey} ${
-        col.foreignKeyReference ? `(${col.foreignKeyReference})` : ""
-      }`;
-      columnsList.appendChild(li);
+      hasColumns = true; // Se entrar aqui, significa que há colunas
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+    <td>${col.name}</td>
+    <td>${col.type}</td>
+    <td>${col.allowNull ? "✔" : "✖"}</td>
+    <td>${col.isPrimaryKey ? "✔" : "✖"}</td>
+    <td>${col.isForeignKey ? "✔" : "✖"}</td>
+    <td>${col.foreignKeyReference || "-"}</td>
+  `;
+      columnsList.appendChild(row);
     });
+
+    // Se nenhuma coluna foi encontrada, exibir mensagem
+    if (!hasColumns) {
+      const messageRow = document.createElement("tr");
+      messageRow.innerHTML = `
+    <td colspan="6" style="text-align: center; color: gray;">
+      Nenhuma coluna cadastrada. Adicione pelo menos uma.
+    </td>
+  `;
+      columnsList.appendChild(messageRow);
+    }
 
     // Registros
+    const recordsHeader = tableElement.querySelector(".records-header");
     const recordsList = tableElement.querySelector(".records-list");
+    recordsHeader.innerHTML = "";
+    recordsList.innerHTML = "";
+
+    /* let hasColumns = false;  */ // Variável para verificar se há colunas
+
+    // Verificar se há colunas
+    if (node.columns.root) {
+      const headerRow = document.createElement("tr");
+      node.columns.inOrder(node.columns.root, (col) => {
+        hasColumns = true; // Marcar que há colunas
+        const th = document.createElement("th");
+        th.textContent = col.name;
+        headerRow.appendChild(th);
+      });
+      recordsHeader.appendChild(headerRow);
+    }
+
+    // Adicionar registros
     node.records.inOrder(node.records.root, (record) => {
-      const li = document.createElement("li");
-      li.textContent = Object.entries(record.data)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join(", ");
-      recordsList.appendChild(li);
+      const row = document.createElement("tr");
+      node.columns.inOrder(node.columns.root, (col) => {
+        const td = document.createElement("td");
+        td.textContent = record.data[col.name] || "-";
+        row.appendChild(td);
+      });
+      recordsList.appendChild(row);
     });
 
-    tableList.appendChild(tableElement); // Adiciona no DOM
+    // Se não houver colunas, exibir mensagem no thead
+    if (!hasColumns) {
+      const messageRow = document.createElement("tr");
+      const messageCell = document.createElement("th");
+      messageCell.setAttribute("colspan", "6");
+      messageCell.style.textAlign = "center";
+      messageCell.style.color = "gray";
+      messageCell.textContent =
+        "Nenhuma coluna cadastrada. Adicione pelo menos uma.";
+      messageRow.appendChild(messageCell);
+      recordsHeader.appendChild(messageRow);
+    }
+
+    tableList.appendChild(tableElement);
   });
 }
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  renderTables(); // Chama a função renderTables assim que o conteúdo da página for carregado
+});

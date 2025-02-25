@@ -19,16 +19,36 @@
 
     <!-- Template para as tabelas -->
     <template id="tableTemplate">
-      <div class="table-item">
-        <strong class="table-name"></strong>
-        <button class="add-column-btn">Adicionar Coluna</button>
-        <button class="add-record-btn">Adicionar Registro</button>
-        <h4>Colunas:</h4>
-        <ul class="columns-list"></ul>
-        <h4>Registros:</h4>
-        <ul class="records-list"></ul>
-      </div>
-    </template>
+        <div class="table-item">
+            <div class="table-header">
+                <strong class="table-name"></strong>
+                <button class="add-column-btn">Adicionar Coluna</button>
+                <button class="add-record-btn">Adicionar Registro</button>
+                <button class="toggle-columns-btn">Mostrar Detalhes das Colunas</button>
+            </div>
+        <!-- Tabela detalhes das colunas -->
+          <table class="table-structure hidden">
+            <thead>
+              <tr class="column-header">
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>NULL</th>
+                <th>PK</th>
+                <th>FK</th>
+                <th>Referência FK</th>
+              </tr>
+            </thead>
+            <tbody class="columns-list"></tbody>
+          </table>
+
+          <!-- Tabela colunas e registros -->
+          <table class="table-data">
+            <thead class="records-header"></thead>
+            <tbody class="records-list"></tbody>
+          </table>
+        </div>
+      </template>
+      
 
     <!-- Modal para adicionar coluna -->
     <div class="modal" id="columnModal">

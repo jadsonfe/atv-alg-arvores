@@ -97,3 +97,57 @@ button {
   display: flex;
   justify-content: end;
 }
+
+.hidden {
+  display: none;
+}
+
+.table-structure,
+.table-data {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table-structure th,
+.table-structure td,
+.table-data th,
+.table-data td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.table-structure th,
+.table-data th {
+  background: #f4f4f4;
+  font-weight: bold;
+}
+
+.table-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px; /* Espaço entre os elementos */
+}
+
+.table-name {
+  flex-grow: 1; /* Faz o nome ocupar o espaço disponível à esquerda */
+}
+
+.table-header button {
+  white-space: nowrap; /* Impede que os botões quebrem para a linha de baixo */
+}
+
+button {
+  margin-top: 5px;
+  cursor: pointer;
+}
