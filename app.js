@@ -86,38 +86,69 @@ function addTable() {
   renderTables();
 }
 
+let currentTable = null; // Variável global para armazenar a tabela atual
+
 function addColumn(tableName) {
-  const table = bst.search({ name: tableName }); // Busca a tabela pelo nome
-  if (!table) return alert("Tabela não encontrada.");
-  const columnName = prompt("Nome da coluna:");
-  if (!columnName) return alert("Nome da coluna inválido.");
-  const columnType = prompt("Tipo da coluna:");
-  const allowNull = confirm("Permitir NULL?") ? "SIM" : "NÃO";
-  const isPrimaryKey = confirm("É chave primária?") ? "SIM" : "NÃO";
-  let isForeignKey = confirm("É chave estrangeira?") ? "SIM" : "NÃO";
-  let foreignKeyReference = "";
-  if (isForeignKey === "SIM") {
-    const referencedTable = prompt("Qual tabela será referenciada?");
-    const referencedColumn = prompt("Qual coluna será referenciada?");
-    if (referencedTable && referencedColumn) {
-      foreignKeyReference = `FK que referencia ${referencedColumn} da tabela ${referencedTable}`;
-    }
-  }
-  table.columns.insert(
-    new ColumnNode(
-      columnName,
-      columnType,
-      allowNull,
-      isPrimaryKey,
-      isForeignKey,
-      foreignKeyReference
-    )
-  );
-  renderTables();
+  currentTable = bst.search({ name: tableName });
+  if (!currentTable) return alert("Tabela não encontrada.");
+
+  document.getElementById("columnModal").style.display = "block";
 }
 
+function saveColumn() {
+  if (!currentTable) return alert("Nenhuma tabela selecionada.");
+
+  const columnName = document.getElementById("columnName").value.trim();
+  const columnType = document.getElementById("columnType").value.trim();
+  const allowNull = document.getElementById("allowNull").checked ? true : false;
+  const isPrimaryKey = document.getElementById("isPrimaryKey").checked ? true : false;
+  const isForeignKey = document.getElementById("isForeignKey").checked ? true : false;
+
+  let foreignKeyReference = "";
+  if (isForeignKey === true) {
+    const referencedTable = document.getElementById("referencedTable").value.trim();
+    const referencedColumn = document.getElementById("referencedColumn").value.trim();
+    if (referencedTable && referencedColumn) {
+      foreignKeyReference = `FK que referencia ${referencedColumn} da tabela ${referencedTable}`;
+    } else {
+      return alert("É necessário preencher a tabela e a coluna referenciada para FK.");
+    }
+  }
+
+  if (!columnName || !columnType) return alert("Preencha todos os campos obrigatórios.");
+
+  currentTable.columns.insert(
+    new ColumnNode(columnName, columnType, allowNull, isPrimaryKey, isForeignKey, foreignKeyReference)
+  );
+
+  closeModal();
+  renderTables(); // Atualiza a exibição das tabelas
+}
+
+function toggleForeignKey() {
+  let fkFields = document.getElementById("foreignKeyFields");
+  fkFields.style.display = document.getElementById("isForeignKey").checked
+    ? "block"
+    : "none";
+}
+
+function closeModal() {
+  document.getElementById("columnModal").style.display = "none";
+
+  // Resetar os campos do modal
+  document.getElementById("columnName").value = "";
+  document.getElementById("columnType").value = "";
+  document.getElementById("allowNull").checked = false;
+  document.getElementById("isPrimaryKey").checked = false;
+  document.getElementById("isForeignKey").checked = false;
+  document.getElementById("foreignKeyFields").style.display = "none";
+  document.getElementById("referencedTable").value = "";
+  document.getElementById("referencedColumn").value = "";
+}
+
+
 function addRecord(tableName) {
-  const table = bst.search({ name: tableName }); // Busca a tabela pelo nome
+  const table = bst.search({ name: tableName });
   if (!table) return alert("Tabela não encontrada.");
   let record = {};
   table.columns.inOrder(table.columns.root, (col) => {
