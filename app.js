@@ -101,24 +101,42 @@ function saveColumn() {
   const columnName = document.getElementById("columnName").value.trim();
   const columnType = document.getElementById("columnType").value.trim();
   const allowNull = document.getElementById("allowNull").checked ? true : false;
-  const isPrimaryKey = document.getElementById("isPrimaryKey").checked ? true : false;
-  const isForeignKey = document.getElementById("isForeignKey").checked ? true : false;
+  const isPrimaryKey = document.getElementById("isPrimaryKey").checked
+    ? true
+    : false;
+  const isForeignKey = document.getElementById("isForeignKey").checked
+    ? true
+    : false;
 
   let foreignKeyReference = "";
   if (isForeignKey === true) {
-    const referencedTable = document.getElementById("referencedTable").value.trim();
-    const referencedColumn = document.getElementById("referencedColumn").value.trim();
+    const referencedTable = document
+      .getElementById("referencedTable")
+      .value.trim();
+    const referencedColumn = document
+      .getElementById("referencedColumn")
+      .value.trim();
     if (referencedTable && referencedColumn) {
       foreignKeyReference = `FK que referencia ${referencedColumn} da tabela ${referencedTable}`;
     } else {
-      return alert("É necessário preencher a tabela e a coluna referenciada para FK.");
+      return alert(
+        "É necessário preencher a tabela e a coluna referenciada para FK."
+      );
     }
   }
 
-  if (!columnName || !columnType) return alert("Preencha todos os campos obrigatórios.");
+  if (!columnName || !columnType)
+    return alert("Preencha todos os campos obrigatórios.");
 
   currentTable.columns.insert(
-    new ColumnNode(columnName, columnType, allowNull, isPrimaryKey, isForeignKey, foreignKeyReference)
+    new ColumnNode(
+      columnName,
+      columnType,
+      allowNull,
+      isPrimaryKey,
+      isForeignKey,
+      foreignKeyReference
+    )
   );
 
   closeModal();
@@ -146,7 +164,6 @@ function closeModal() {
   document.getElementById("referencedColumn").value = "";
 }
 
-
 function addRecord(tableName) {
   const table = bst.search({ name: tableName });
   if (!table) return alert("Tabela não encontrada.");
@@ -162,32 +179,45 @@ function addRecord(tableName) {
 
 function renderTables() {
   const tableList = document.getElementById("tableList");
+  const tableTemplate = document.getElementById("tableTemplate");
+
   tableList.innerHTML = "";
+
   bst.inOrder(bst.root, (node) => {
-    const div = document.createElement("div");
-    div.classList.add("table-item");
-    let columnsHtml = "";
+    const tableElement = tableTemplate.content.cloneNode(true); // Clona o template
+
+    tableElement.querySelector(".table-name").textContent = node.name; // Define o nome da tabela
+
+    // Botões
+    tableElement
+      .querySelector(".add-column-btn")
+      .addEventListener("click", () => addColumn(node.name));
+    tableElement
+      .querySelector(".add-record-btn")
+      .addEventListener("click", () => addRecord(node.name));
+
+    // Colunas
+    const columnsList = tableElement.querySelector(".columns-list");
     node.columns.inOrder(node.columns.root, (col) => {
-      columnsHtml += `<li>${col.name} (${col.type}) - NULL: ${
+      const li = document.createElement("li");
+      li.textContent = `${col.name} (${col.type}) - NULL: ${
         col.allowNull
       } | PK: ${col.isPrimaryKey} | FK: ${col.isForeignKey} ${
         col.foreignKeyReference ? `(${col.foreignKeyReference})` : ""
-      }</li>`;
+      }`;
+      columnsList.appendChild(li);
     });
-    let recordsHtml = "";
+
+    // Registros
+    const recordsList = tableElement.querySelector(".records-list");
     node.records.inOrder(node.records.root, (record) => {
-      let recordData = Object.entries(record.data)
+      const li = document.createElement("li");
+      li.textContent = Object.entries(record.data)
         .map(([key, value]) => `${key}: ${value}`)
         .join(", ");
-      recordsHtml += `<li>${recordData}</li>`;
+      recordsList.appendChild(li);
     });
-    div.innerHTML = `<strong>${node.name}</strong>
-            <button onclick="addColumn('${node.name}')">Adicionar Coluna</button>
-            <button onclick="addRecord('${node.name}')">Adicionar Registro</button>
-            <h4>Colunas:</h4>
-            <ul>${columnsHtml}</ul>
-            <h4>Registros:</h4>
-            <ul>${recordsHtml}</ul>`;
-    tableList.appendChild(div);
+
+    tableList.appendChild(tableElement); // Adiciona no DOM
   });
 }

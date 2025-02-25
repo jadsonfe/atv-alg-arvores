@@ -16,23 +16,43 @@
       </div>
       <div class="table-list" id="tableList"></div>
     </div>
-    <div class="modal" id="columnModal">
-        <div class="modal-content">
-            <h3>Adicionar Coluna</h3>
-            <input type="text" id="columnName" placeholder="Nome da Coluna">
-            <input type="text" id="columnType" placeholder="Tipo da Coluna">
 
-            
-            <label><input type="checkbox" id="allowNull"> Permitir NULL</label>
-            <label><input type="checkbox" id="isPrimaryKey"> Chave Primária</label>
-            <label><input type="checkbox" id="isForeignKey" onchange="toggleForeignKey()"> Chave Estrangeira</label>
-            <div id="foreignKeyFields" style="display: none;">
-                <input type="text" id="referencedTable" placeholder="Tabela Referenciada">
-                <input type="text" id="referencedColumn" placeholder="Coluna Referenciada">
-            </div>
-            <button onclick="saveColumn()">Salvar</button>
-            <button class="close" onclick="closeModal()">Cancelar</button>
+    <!-- Template para as tabelas -->
+    <template id="tableTemplate">
+      <div class="table-item">
+        <strong class="table-name"></strong>
+        <button class="add-column-btn">Adicionar Coluna</button>
+        <button class="add-record-btn">Adicionar Registro</button>
+        <h4>Colunas:</h4>
+        <ul class="columns-list"></ul>
+        <h4>Registros:</h4>
+        <ul class="records-list"></ul>
+      </div>
+    </template>
+
+    <div class="modal" id="columnModal">
+      <div class="modal-content">
+        <h3>Adicionar Coluna</h3>
+        <input type="text" id="columnName" placeholder="Nome da Coluna" />
+        <input type="text" id="columnType" placeholder="Tipo da Coluna" />
+        <label>
+            <input type="checkbox" id="allowNull" /> Permitir NULL
+        </label>
+        <label>
+            <input type="checkbox" id="isPrimaryKey" /> 
+            Chave Primária
+        </label>
+        <label>
+            <input type="checkbox" id="isForeignKey" onchange="toggleForeignKey()"/> 
+            Chave Estrangeira
+        </label>
+        <div id="foreignKeyFields" style="display: none">
+          <input type="text" id="referencedTable" placeholder="Tabela Referenciada"/>
+          <input type="text" id="referencedColumn" placeholder="Coluna Referenciada"/>
         </div>
+        <button onclick="saveColumn()">Salvar</button>
+        <button class="close" onclick="closeModal()">Cancelar</button>
+      </div>
     </div>
   </body>
 </html>
