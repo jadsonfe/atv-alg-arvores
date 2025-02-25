@@ -160,15 +160,16 @@ function addRecord(tableName) {
   currentTableName = tableName; // Armazena a tabela atual para usar no saveRecord()
 
   const recordInputs = document.getElementById("recordInputs");
-  recordInputs.innerHTML = ""; // Limpa os inputs antes de gerar novos
+  recordInputs.innerHTML = ""; 
 
   // Cria dinamicamente os campos com base nas colunas da tabela
   table.columns.inOrder(table.columns.root, (col) => {
     const inputDiv = document.createElement("div");
     inputDiv.innerHTML = `
-      <label>${col.name}:</label>
-      <input type="text" id="record-${col.name}" placeholder="Digite um valor">
+      <label for="record-${col.name}">${col.name} (${col.type}):</label>
+      <input type="text" id="record-${col.name}" placeholder="Digite um valor" />
     `;
+    
     recordInputs.appendChild(inputDiv);
   });
 

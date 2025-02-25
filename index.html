@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gerenciador de Tabelas - BST</title>
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/modal.css">
-    <link rel="stylesheet" href="css/table.css">
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/modal.css" />
+    <link rel="stylesheet" href="css/table.css" />
     <script src="app.js"></script>
   </head>
   <body>
@@ -58,7 +58,8 @@
     <div class="modal" id="columnModal">
       <div class="modal-content">
         <h3>Adicionar Coluna</h3>
-        <input type="text" id="columnName" placeholder="Nome da Coluna" />
+        <label for="columnName">Nome:</label>
+        <input type="text" id="columnName" placeholder="Ex: Name" required />
         <label for="columnType">Tipo da Coluna:</label>
         <select id="columnType">
           <option value="VARCHAR">VARCHAR</option>
