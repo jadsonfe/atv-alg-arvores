@@ -164,7 +164,7 @@ function closeModal() {
   document.getElementById("referencedColumn").value = "";
 }
 
-function addRecord(tableName) {
+/* function addRecord(tableName) {
   const table = bst.search({ name: tableName });
   if (!table) return alert("Tabela não encontrada.");
   let record = {};
@@ -175,6 +175,49 @@ function addRecord(tableName) {
   recordIdCounter++; // Incrementa o contador de IDs
   table.records.insert(new RecordNode(recordIdCounter, record)); // Insere o registro com um ID único
   renderTables();
+} */
+
+function addRecord(tableName) {
+  const table = bst.search({ name: tableName });
+  if (!table) return alert("Tabela não encontrada.");
+
+  currentTableName = tableName; // Armazena a tabela atual para usar no saveRecord()
+
+  const recordInputs = document.getElementById("recordInputs");
+  recordInputs.innerHTML = ""; // Limpa os inputs antes de gerar novos
+
+  // Cria dinamicamente os campos com base nas colunas da tabela
+  table.columns.inOrder(table.columns.root, (col) => {
+    const inputDiv = document.createElement("div");
+    inputDiv.innerHTML = `
+      <label>${col.name}:</label>
+      <input type="text" id="record-${col.name}" placeholder="Digite um valor">
+    `;
+    recordInputs.appendChild(inputDiv);
+  });
+
+  document.getElementById("recordModal").style.display = "flex"; // Abre o modal
+}
+
+function saveRecord() {
+  const table = bst.search({ name: currentTableName });
+  if (!table) return alert("Erro: Tabela não encontrada.");
+
+  let record = {};
+  table.columns.inOrder(table.columns.root, (col) => {
+    const input = document.getElementById(`record-${col.name}`);
+    record[col.name] = input.value.trim();
+  });
+
+  recordIdCounter++; // Incrementa o contador de IDs
+  table.records.insert(new RecordNode(recordIdCounter, record)); // Insere o registro com um ID único
+
+  closeRecordModal();
+  renderTables();
+}
+
+function closeRecordModal() {
+  document.getElementById("recordModal").style.display = "none";
 }
 
 function renderTables() {

@@ -30,6 +30,7 @@
       </div>
     </template>
 
+    <!-- Modal para adicionar coluna -->
     <div class="modal" id="columnModal">
       <div class="modal-content">
         <h3>Adicionar Coluna</h3>
@@ -39,19 +40,36 @@
             <input type="checkbox" id="allowNull" /> Permitir NULL
         </label>
         <label>
-            <input type="checkbox" id="isPrimaryKey" /> 
-            Chave Primária
+          <input type="checkbox" id="isPrimaryKey" />
+          Chave Primária
         </label>
         <label>
             <input type="checkbox" id="isForeignKey" onchange="toggleForeignKey()"/> 
-            Chave Estrangeira
+          Chave Estrangeira
         </label>
         <div id="foreignKeyFields" style="display: none">
-          <input type="text" id="referencedTable" placeholder="Tabela Referenciada"/>
-          <input type="text" id="referencedColumn" placeholder="Coluna Referenciada"/>
+            <input type="text" id="referencedTable" placeholder="Tabela Referenciada"/>
+            <input type="text" id="referencedColumn" placeholder="Coluna Referenciada"/>
         </div>
-        <button onclick="saveColumn()">Salvar</button>
-        <button class="close" onclick="closeModal()">Cancelar</button>
+        <div class="buttons">
+            <button onclick="saveColumn()">Salvar</button>
+            <button class="close" onclick="closeModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para adicionar registro -->
+    <div class="modal" id="recordModal">
+      <div class="modal-content">
+        <h3>Adicionar Registro</h3>
+        <form id="recordForm">
+          <div id="recordInputs"></div>
+          <!-- Campos das colunas serão gerados dinamicamente -->
+           <div class="buttons">
+               <button type="button" onclick="saveRecord()">Salvar</button>
+               <button type="button" class="close" onclick="closeRecordModal()">Cancelar</button>
+           </div>
+        </form>
       </div>
     </div>
   </body>
