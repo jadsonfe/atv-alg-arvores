@@ -19,61 +19,85 @@
 
     <!-- Template para as tabelas -->
     <template id="tableTemplate">
-        <div class="table-item">
-            <div class="table-header">
-                <strong class="table-name"></strong>
-                <button class="add-column-btn">Adicionar Coluna</button>
-                <button class="add-record-btn">Adicionar Registro</button>
-                <button class="toggle-columns-btn">Mostrar Detalhes das Colunas</button>
-            </div>
-        <!-- Tabela detalhes das colunas -->
-          <table class="table-structure hidden">
-            <thead>
-              <tr class="column-header">
-                <th>Nome</th>
-                <th>Tipo</th>
-                <th>NULL</th>
-                <th>PK</th>
-                <th>FK</th>
-                <th>Referência FK</th>
-              </tr>
-            </thead>
-            <tbody class="columns-list"></tbody>
-          </table>
-
-          <!-- Tabela colunas e registros -->
-          <table class="table-data">
-            <thead class="records-header"></thead>
-            <tbody class="records-list"></tbody>
-          </table>
+      <div class="table-item">
+        <div class="table-header">
+          <strong class="table-name"></strong>
+          <button class="add-column-btn">Adicionar Coluna</button>
+          <button class="add-record-btn">Adicionar Registro</button>
+          <button class="toggle-columns-btn">
+            Mostrar Detalhes das Colunas
+          </button>
         </div>
-      </template>
-      
+        <!-- Tabela detalhes das colunas -->
+        <table class="table-structure hidden">
+          <thead>
+            <tr class="column-header">
+              <th>Nome</th>
+              <th>Tipo</th>
+              <th>NULL</th>
+              <th>PK</th>
+              <th>FK</th>
+              <th>Referência FK</th>
+            </tr>
+          </thead>
+          <tbody class="columns-list"></tbody>
+        </table>
+
+        <!-- Tabela colunas e registros -->
+        <table class="table-data">
+          <thead class="records-header"></thead>
+          <tbody class="records-list"></tbody>
+        </table>
+      </div>
+    </template>
 
     <!-- Modal para adicionar coluna -->
     <div class="modal" id="columnModal">
       <div class="modal-content">
         <h3>Adicionar Coluna</h3>
         <input type="text" id="columnName" placeholder="Nome da Coluna" />
-        <input type="text" id="columnType" placeholder="Tipo da Coluna" />
-        <label>
-            <input type="checkbox" id="allowNull" /> Permitir NULL
-        </label>
+        <label for="columnType">Tipo da Coluna:</label>
+        <select id="columnType">
+          <option value="VARCHAR">VARCHAR</option>
+          <option value="INT">INT</option>
+          <option value="TEXT">TEXT</option>
+          <option value="DATE">DATE</option>
+          <option value="FLOAT">FLOAT</option>
+          <option value="BOOLEAN">BOOLEAN</option>
+          <option value="DECIMAL">DECIMAL</option>
+          <option value="CHAR">CHAR</option>
+          <option value="TIMESTAMP">TIMESTAMP</option>
+          <!-- Adicione mais tipos conforme necessário -->
+        </select>
+
+        <label> <input type="checkbox" id="allowNull" /> Permitir NULL </label>
         <label>
           <input type="checkbox" id="isPrimaryKey" />
           Chave Primária
         </label>
         <label>
-            <input type="checkbox" id="isForeignKey" onchange="toggleForeignKey()"/> 
+          <input
+            type="checkbox"
+            id="isForeignKey"
+            onchange="toggleForeignKey()"
+          />
           Chave Estrangeira
         </label>
         <div id="foreignKeyFields" style="display: none">
-            <input type="text" id="referencedTable" placeholder="Tabela Referenciada"/>
-            <input type="text" id="referencedColumn" placeholder="Coluna Referenciada"/>
+          <input
+            type="text"
+            id="referencedTable"
+            placeholder="Tabela Referenciada"
+          />
+          <input
+            type="text"
+            id="referencedColumn"
+            placeholder="Coluna Referenciada"
+          />
         </div>
         <div class="buttons">
-            <button onclick="saveColumn()">Salvar</button>
-            <button class="close" onclick="closeModal()">Cancelar</button>
+          <button onclick="saveColumn()">Salvar</button>
+          <button class="close" onclick="closeModal()">Cancelar</button>
         </div>
       </div>
     </div>
@@ -85,10 +109,12 @@
         <form id="recordForm">
           <div id="recordInputs"></div>
           <!-- Campos das colunas serão gerados dinamicamente -->
-           <div class="buttons">
-               <button type="button" onclick="saveRecord()">Salvar</button>
-               <button type="button" class="close" onclick="closeRecordModal()">Cancelar</button>
-           </div>
+          <div class="buttons">
+            <button type="button" onclick="saveRecord()">Salvar</button>
+            <button type="button" class="close" onclick="closeRecordModal()">
+              Cancelar
+            </button>
+          </div>
         </form>
       </div>
     </div>
